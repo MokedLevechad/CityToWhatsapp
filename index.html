@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>לב אחד - קבוצות וואטסאפ לפי עיר</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      min-height: 100vh;
+      direction: rtl;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 30px 20px;
+      background: linear-gradient(135deg, #b71c1c 0%, #d32f2f 100%);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(183, 28, 28, 0.3);
+      color: white;
+    }
+
+    .logo {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 20px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .logo img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+    }
+
+    .header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .header p {
+      font-size: 1.2em;
+      opacity: 0.9;
+    }
+
+    .search-container {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+
+    .search-label {
+      font-size: 1.3em;
+      color: #b71c1c;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    #cityInput {
+      flex: 1;
+      padding: 15px 20px;
+      font-size: 1.1em;
+      border: 2px solid #e0e0e0;
+      border-radius: 50px;
+      text-align: center;
+      transition: all 0.3s ease;
+      background: #f8f9fa;
+    }
+
+    #cityInput:focus {
+      outline: none;
+      border-color: #d32f2f;
+      background: white;
+      box-shadow: 0 5px 15px rgba(211, 47, 47, 0.2);
+    }
+
+    .search-button {
+      padding: 15px 30px;
+      font-size: 1.1em;
+      background: linear-gradient(135deg, #b71c1c 0%, #d32f2f 100%);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      min-width: 150px;
+    }
+
+    .search-button:hover {
+      background: linear-gradient(135deg, #a31414 0%, #c62828 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(183, 28, 28, 0.3);
+    }
+
+    .search-button:active {
+      transform: translateY(0);
+    }
+
+    #result {
+      margin-top: 30px;
+      padding: 25px;
+      font-size: 1.2em;
+      text-align: center;
+      border-radius: 15px;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .result-success {
+      background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+      color: white;
+      box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+    }
+
+    .result-error {
+      background: linear-gradient(135deg, #ff9800 0%, #ffb74d 100%);
+      color: white;
+      box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+    }
+
+    .whatsapp-link {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 12px 25px;
+      background: #25d366;
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+    }
+
+    .whatsapp-link:hover {
+      background: #128c7e;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
+    }
+
+    .cities-preview {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      margin-top: 30px;
+    }
+
+    .cities-preview h3 {
+      color: #b71c1c;
+      font-size: 1.4em;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .cities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .city-tag {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      padding: 10px 15px;
+      border-radius: 25px;
+      text-align: center;
+      font-size: 0.9em;
+      color: #b71c1c;
+      border: 1px solid #e0e0e0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .city-tag:hover {
+      background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 10px rgba(183, 28, 28, 0.2);
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 10px;
+      }
+
+      .header h1 {
+        font-size: 2em;
+      }
+
+      .input-group {
+        flex-direction: column;
+      }
+
+      .search-button {
+        min-width: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <img src="attached_assets/לב אחד_1751973320320.png" alt="לב אחד - Community Crisis Aid">
+      </div>
+      <h1>לב אחד</h1>
+      <p>מצא את קבוצת הוואטסאפ של העיר שלך</p>
+    </div>
+
+    <div class="search-container">
+      <div class="search-label">הכנס את שם העיר שלך:</div>
+      <div class="input-group">
+        <input type="text" id="cityInput" placeholder="לדוגמה: כרמיאל" onkeypress="if(event.key==='Enter') findLink()">
+        <button class="search-button" onclick="findLink()">חפש קבוצה</button>
+      </div>
+      <div id="result"></div>
+    </div>
+
+    <div class="cities-preview">
+      <h3>ערים זמינות:</h3>
+      <div class="cities-grid" id="citiesGrid"></div>
+    </div>
+  </div>
+
+  <script>
+    const cityLinks = {
+      "אעבלין": "https://chat.whatsapp.com/KSLS3yFSjw2CGjCrhK9Dao",
+      "בית רימון": "https://chat.whatsapp.com/Bo3No7dRWuL26djTiBZxq5",
+      "כפר יובל": "https://chat.whatsapp.com/LAvjJg4l8xH1EVCaOhn10J",
+      "כפר חרוב": "https://chat.whatsapp.com/LTn7NqPRRtYKehedOmgQVR",
+      "כרמיאל": "https://chat.whatsapp.com/DkmHMPxpXcoG5W6Xx05Kua",
+      "להבות הבשן": "https://chat.whatsapp.com/HiWIVW945SWH2C20Bi5NQS",
+      "לימן": "https://chat.whatsapp.com/BJOpfooSZGSELesMl5SKXT",
+      "מגדל": "https://chat.whatsapp.com/IT1woMAHsWE1vwua0jEYkp",
+      "מצפה נטופה": "https://chat.whatsapp.com/GmjWBJ8LnMnKmM5Y6oOeo1",
+      "מורשת": "https://chat.whatsapp.com/DhP7AIf3D9Y8VIB9fSV9bZ",
+      "נהריה": "https://chat.whatsapp.com/KNaImgHcytT9tlX9n3okMQ",
+      "קרית שמונה": "https://chat.whatsapp.com/Iabjc0UrGMF5bqLUgrQIFv",
+      "קצרין": "https://chat.whatsapp.com/B6RZZeXIYxV7w0dIkmei9v",
+      "שלומי": "https://chat.whatsapp.com/HUILje3oyA85pemGzBffEG",
+      "צורית": "https://chat.whatsapp.com/ERYyDrV67iGIi8aD1XDM8v",
+      "טל אל": "https://chat.whatsapp.com/IDJHqry1iRuA1rc6eecUZa",
+      "עכו": "https://chat.whatsapp.com/G1535TvGwTRC2UwGjJftaZ",
+      "אביאל": "https://chat.whatsapp.com/BkfYkP2ogx9FMACXxs4TQw",
+      "אביטל": "https://chat.whatsapp.com/JLLzX0mRYJK9uEFQjDqC2j",
+      "אחוזת ברק": "https://chat.whatsapp.com/EN5ezva5nZODEVECd3GU6F",
+      "אליקים": "https://chat.whatsapp.com/KCVLUaKHze1HT5qdrMV0Pf",
+      "אור עקיבא": "https://chat.whatsapp.com/LcyAm2Xw3QH9WuyUG3hFG6",
+      "בלפוריה": "https://chat.whatsapp.com/ENW2OX99BUi7w9LCemWuKO",
+      "בנימינה - גבעת עדה": "https://chat.whatsapp.com/Hgoie6Uq6e80D9buG6jiXX",
+      "הושעיה": "https://chat.whatsapp.com/L5r3xUURxJ41zcMUaiWDqf",
+      "חדרה": "https://chat.whatsapp.com/CaoqGcxSdx89P51YBH55rN",
+      "חיפה": "https://chat.whatsapp.com/HTvCZ4VxKhcD1KjkdBQtMR",
+      "יקנעם עילית": "https://chat.whatsapp.com/GimZoI2J5VX54D5l6MDxWL",
+      "כפר יהושע": "https://chat.whatsapp.com/BfapRtKWWHD0WBoM89ybce",
+      "כפר תבור": "https://chat.whatsapp.com/IV1pRCX2BwJGciE7sUPzVN",
+      "מגדים": "https://chat.whatsapp.com/DvJdMI3b41i8tGQlvt2juT",
+      "מעלה גלבוע": "https://chat.whatsapp.com/LUQ0N1OWvfa5vltQ0lqXHR",
+      "מנשייה זבדה": "https://chat.whatsapp.com/GaypNrCMLyuIzZrRgzD4Oo",
+      "נוף הגליל": "https://chat.whatsapp.com/CAZzfUEVdmo3e8uv3ryHTZ",
+      "נצרת עילית": "https://chat.whatsapp.com/CAZzfUEVdmo3e8uv3ryHTZ",
+      "נשר": "https://chat.whatsapp.com/Jjs8cK1Zo5BAc2LlZCSkBP",
+      "עין איילה": "https://chat.whatsapp.com/GCBh1GgrlyMEN8um4xtZwZ",
+      "עין הוד": "https://chat.whatsapp.com/EB7YzWMNc2BC0VehTNer8F",
+      "עפולה": "https://chat.whatsapp.com/CyS5AS6Rzh8GTVWVNsbDYt",
+      "עתלית": "https://chat.whatsapp.com/Dyd8Gh6IvPFBYbGm0nZPZv",
+      "פרדס חנה-כרכור": "https://chat.whatsapp.com/HTr5nT9K9PxIAP3fB3SJTY",
+      "קיסריה": "https://chat.whatsapp.com/GBZCYaxUyOLBanbzKpU7EG",
+      "קרית טבעון": "https://chat.whatsapp.com/Ee7s6a08pWZJqNiSChelQb",
+      "רמת השופט": "https://chat.whatsapp.com/CrXsVqSWIy79JvbvnOEjFQ",
+      "רמת ישי": "https://chat.whatsapp.com/LPkJEOo7w7ZHiqlLC7phkB",
+      "שדות ים": "https://chat.whatsapp.com/Bk61GPScwszC2161wdqz5f",
+      "תל עדשים": "https://chat.whatsapp.com/IqPWOd3tNI14L5kwjWXho1",
+      "אבן יהודה": "https://chat.whatsapp.com/GAVdCIZrZ7K95dIofYb5vI",
+      "אביחיל": "https://chat.whatsapp.com/LH8Lnhs4WYUCXrnEvNhxQM",
+      "אור יהודה": "https://chat.whatsapp.com/FPF473ZB8Nv3mmnpGaBgwc",
+      "בת ים": "https://chat.whatsapp.com/J85JILcXP1yGjQa7IZHbDz",
+      "בחן": "https://chat.whatsapp.com/CiPY5Gc6pjjCKqlnyn3Ik2",
+      "בני ברק": "https://chat.whatsapp.com/JKAMGDUQhDZH0YylaGKIqA",
+      "גאולים": "https://chat.whatsapp.com/HLeIoWq7Bce4jrorrpUC2j",
+      "גבעת שמואל": "https://chat.whatsapp.com/JeB6XBv1fQ9E0uPFBYwlgZ",
+      "גבעתיים": "https://chat.whatsapp.com/JiqLs8ywPGfC6eea3pretd",
+      "גני תקווה": "https://chat.whatsapp.com/HfdEk6iA9V47vBg2pp47Oy",
+      "הרצליה": "https://chat.whatsapp.com/FvjdCbTU7Rw4rjBpvbmiII",
+      "חולון": "https://chat.whatsapp.com/IuFil0l8xHd9RNezsw8qz4",
+      "יהוד-מונוסון": "https://chat.whatsapp.com/LDEL39P3v3TEkIS2rXziGd",
+      "כוכב יאיר-צור יגאל": "https://chat.whatsapp.com/DyRdPDVlLfHKLWnRB1KZvq",
+      "כפר הראה": "https://chat.whatsapp.com/Ei26q3fAMTO44VpJcnb34N",
+      "כפר יונה": "https://chat.whatsapp.com/CGxen0Csbhv4UZgcDMcvdn",
+      "כפר נטר": "https://chat.whatsapp.com/L7m21vVwoLp0Pxwj0cStko",
+      "כפר סבא": "https://chat.whatsapp.com/F4zaCVxYKrY1sGuIjZO9IS",
+      "כפר שמריהו": "https://chat.whatsapp.com/JVYR6nCLe307X66kqNo5Eo",
+      "משמרת": "https://chat.whatsapp.com/E4fokoyVgx77w1Q3BrL4ob",
+      "נתניה": "https://chat.whatsapp.com/Dsr4KNEqcQFD51MlEki6v4",
+      "נירית": "https://chat.whatsapp.com/DftRNjleOPHDf6VSA3oaUh",
+      "סביון-גני יהודה": "https://chat.whatsapp.com/D8YdPs0bjsOLX0PYl7NWtf",
+      "צופית": "https://chat.whatsapp.com/K0Y6qaVdmdzF8uAnmMwFcx",
+      "צור משה": "https://chat.whatsapp.com/KTrgHkbs73E0fKgYLqnZoU",
+      "קדימה-צורן": "https://chat.whatsapp.com/KBoDmgfsD3J8Uv3D4Elhrw",
+      "קרית אונו": "https://chat.whatsapp.com/I2BfJdNAGEv6iP2KDfEmP3",
+      "רמות השבים": "https://chat.whatsapp.com/Dy3pywj2DAlGWkrW0Yar7p",
+      "רמת גן": "https://chat.whatsapp.com/J5vBUjRaRGwI9nOUUIVgRQ",
+      "רמת השרון": "https://chat.whatsapp.com/CAmmYQLZf3NK8dB87RRgDS",
+      "רעננה": "https://chat.whatsapp.com/EgjaVSmlYoOGX8BxeUiCL2",
+      "תל אביב-יפו": "https://chat.whatsapp.com/IiwTTJSufi99knoUDxN5QP",
+      "תל אביב": "https://chat.whatsapp.com/LTi9sv5WGdqGOaQlD19Gs6",
+      "תל מונד": "https://chat.whatsapp.com/C1yIxqEgRxx1YpK1jlZKS5",
+      "אורה": "https://chat.whatsapp.com/C1yIxqEgRxx1YpK1jlZKS5",
+      "בית זית": "https://chat.whatsapp.com/Czeh7taTErHCaLtrpGLWwX",
+      "בית שמש": "https://chat.whatsapp.com/LA6AVce0wmnEOYB0vzGu6C",
+      "גבעת ישעיהו": "https://chat.whatsapp.com/CyO8i6y46W88rLPAkkkrVT",
+      "גדרה": "https://chat.whatsapp.com/LJcvQTCi3QgC3cTdD57rKW",
+      "גיזו": "https://chat.whatsapp.com/LtOSmWSWwnZ9n9TXzqMJ7v",
+      "חמד": "https://chat.whatsapp.com/Lsl4bIkXNPcEqduS8PhfOG",
+      "חפץ חיים": "https://chat.whatsapp.com/JZYE4ZecasT2ctcpD5MoCt",
+      "יבנה": "https://chat.whatsapp.com/IWaX92qLhWPBHc59IdSEwP",
+      "יד בנימין": "https://chat.whatsapp.com/LW9srZdVMZc8Oygs5iQEQT",
+      "ירושלים": "https://chat.whatsapp.com/CZ9SHy2OLys3Gw0OKsMMXr",
+      "לוד": "https://chat.whatsapp.com/JlpReZz9ECrG3KheWBuKM8",
+      "מבשרת ציון": "https://chat.whatsapp.com/BQq6fWtvOxdG1KR8eo3jWa",
+      "מזכרת בתיה": "https://chat.whatsapp.com/H5PursxHONB5QFwXWudDYX",
+      "משמר איילון": "https://chat.whatsapp.com/IRqbj60Mb15Fmtc2pkZ7CX",
+      "מודיעין-מכבים-רעות": "https://chat.whatsapp.com/Jg5MiJDb1kO1KCEoN2SYou",
+      "נחלים": "https://chat.whatsapp.com/JhvJMC5CqxW69CumXb7Rkf",
+      "נחושה": "https://chat.whatsapp.com/LArJfK4xnsm0RLtvZLvTRe",
+      "נס הרים": "https://chat.whatsapp.com/FExScSlXTZS4Cb8ZbKIPcn",
+      "נס ציונה": "https://chat.whatsapp.com/KjU92wQOkgR7OBJlPzxq3I",
+      "ניר צבי": "https://chat.whatsapp.com/HCIfzuzwFUW53qwb0bQclw",
+      "נווה מיכאל": "https://chat.whatsapp.com/DlHWEfHAU4q5HBKBX5TYTp",
+      "נוף איילון": "https://chat.whatsapp.com/L6U9lXfZOFX07CJz3xNh1K",
+      "פתח תקווה": "https://chat.whatsapp.com/Lrl7URgdpAEG5fQr8D1zYi",
+      "ראשון לציון": "https://chat.whatsapp.com/HXzy0lFkvPP8ZdLvXWrhuy",
+      "ראש העין": "https://chat.whatsapp.com/KOmjzk1TgRMHcaHdCB2Gvr",
+      "רמלה": "https://chat.whatsapp.com/JRWE9HPO6OOFDn7IkopGp7",
+      "רחובות": "https://chat.whatsapp.com/Cf6XapnDAyjCZG3xi2SfhA",
+      "שעלבים": "https://chat.whatsapp.com/GOP8PAEzkDdEyKbKrRQh3q",
+      "שוהם": "https://chat.whatsapp.com/Fiwvc8Ynv6w0kQs0EkPRCJ",
+      "צור הדסה": "https://chat.whatsapp.com/BXEIVYiudTmK9i9Lz7RhbK",
+      "טירת יהודה": "https://chat.whatsapp.com/JViM1OJAktqCBFObp9yBLQ",
+      "בארות יצחק": "https://chat.whatsapp.com/DwePGYJ5fff1unw1Qy9cVa",
+      "אלון שבות": "https://chat.whatsapp.com/HZOTLI6h7EHD698l5Vbk6l",
+      "אלקנה": "https://chat.whatsapp.com/HzvWOBZGvjtBxV30P6XYgM",
+      "אפרת": "https://chat.whatsapp.com/CAfOQNhO7NJ8z0lb0QhPpn",
+      "בית אל": "https://chat.whatsapp.com/BnkEdlPuEud8ETU2PginVV",
+      "ביתר עילית": "https://chat.whatsapp.com/HmkMfO8xUti7o4NizeEkob",
+      "ברוכין": "https://chat.whatsapp.com/FnVAGZKxcxLEfzUa7GCGsJ",
+      "גיתית": "https://chat.whatsapp.com/GmUDOKBKR8U1Ha4wUDR4YR",
+      "גני מודיעין": "https://chat.whatsapp.com/Hbfi7mMEQBo2mBKTkNiNP2",
+      "הר אדר": "https://chat.whatsapp.com/KJbINa1y0EcEqKkF47t1mO",
+      "חברון": "https://chat.whatsapp.com/FIc1qZ4EvCO068ax2zVyun",
+      "חיננית": "https://chat.whatsapp.com/G2f1R9Avpyq42YNkCShNAn",
+      "חשמונאים": "https://chat.whatsapp.com/JbboTfJbDb80unZyM0ZRmm",
+      "יקיר": "https://chat.whatsapp.com/EMBL2pVhIee8cSUnNID83k",
+      "כפר אדומים": "https://chat.whatsapp.com/Fd0LCB8Z0ia2P8nLBsrPZz",
+      "כפר האורנים": "https://chat.whatsapp.com/GrETyIgUkON51MjpS5MoDD",
+      "כפר עציון": "https://chat.whatsapp.com/BAEznewcqpH9yASoFZ8QIn",
+      "מגדל עוז": "https://chat.whatsapp.com/ITnDMlEXFxYGnwIgf5csbH",
+      "מעלה אפרים": "https://chat.whatsapp.com/Gg0mo25ZOczIwYTXRiyk7X",
+      "נופים": "https://chat.whatsapp.com/FQTheR40mi9JdnZkc6xxl8",
+      "נוקדים": "https://chat.whatsapp.com/EoH656mXnaVDHfmztGozBG",
+      "נוה ארז": "https://chat.whatsapp.com/G0JIEEMRwWe3Nf71CScsRq",
+      "נוה דניאל": "https://chat.whatsapp.com/DKyw0xp1eoE0nJTvNrM37e",
+      "נופי פרת": "https://chat.whatsapp.com/JszYjI5dssDHJMiE9SC27m",
+      "נעלה": "https://chat.whatsapp.com/CPPF50W4DRq42DhVODOK4i",
+      "עלי זהב": "https://chat.whatsapp.com/CCkmJPH6clzHKquPUBGOlE",
+      "עלמון": "https://chat.whatsapp.com/KdM4BHq10avHT6quHEaADC",
+      "ענתות": "https://chat.whatsapp.com/KdM4BHq10avHT6quHEaADC",
+      "עפרה": "https://chat.whatsapp.com/C8g24KUoiwYJLcxnRM6r8Z",
+      "קרית ארבע": "https://chat.whatsapp.com/CUo18taqFcd2n7xiMPl3be",
+      "קרית נטפים": "https://chat.whatsapp.com/JESGnj5CjdcDZfKub04wZX",
+      "ראש צורים": "https://chat.whatsapp.com/FeYWl8Hi6k52S4W1qmO1Ii",
+      "סנסנה": "https://chat.whatsapp.com/HC9inSNsdjU1ZoCkcMBusn",
+      "עתניאל": "https://chat.whatsapp.com/L3igNbTcYjWHGlNxt6QbeK",
+      "תקוע": "https://chat.whatsapp.com/K2x2ugRe4i71OsqXfZxUVb",
+      "אבן שמואל": "https://chat.whatsapp.com/KswVEdC4RyF4qAXfgOBjSy",
+      "אילת": "https://chat.whatsapp.com/C7W4QEO2Np3AVpWfBsYZSI",
+      "אשדוד": "https://chat.whatsapp.com/FIhmvtowBwg8mMeUziUwHp",
+      "אשקלון": "https://chat.whatsapp.com/ETSE1juEZyOF96ipKW6PpP",
+      "באר שבע": "https://chat.whatsapp.com/C119mHss7sCAJqTprzhNCi",
+      "בית גמליאל": "https://chat.whatsapp.com/JrVIlnGeiRd4Pq4WQM5pzf",
+      "בית קמה": "https://chat.whatsapp.com/JvvliHjNqsQKX9IF5q1Vaj",
+      "בני עייש": "https://chat.whatsapp.com/Df6WEU4cSGc5efjRv2VBCy",
+      "גבים": "https://chat.whatsapp.com/DUZyYRBdcr7JKPYQdbTI7K",
+      "גן יבנה": "https://chat.whatsapp.com/Cyi9IihbPleCupO1BcD5lO",
+      "זיקים": "https://chat.whatsapp.com/Jmx4zeXF93L3CnHO1PA3ON",
+      "ירוחם": "https://chat.whatsapp.com/L36b1HmE183Au4zZN5Lc9l",
+      "כרמית-מיתר": "https://chat.whatsapp.com/Hv2vHw1kMSV5OANX8amOnh",
+      "כוכב מיכאל": "https://chat.whatsapp.com/FmaOi3Y0eoa8eAzsk52EN0",
+      "להבים": "https://chat.whatsapp.com/BX0zoALEbTg8vyLSLH7LbT",
+      "מנוחה": "https://chat.whatsapp.com/JCpiQtlTc6cJN8sHZebZyE",
+      "ניצני סיני": "https://chat.whatsapp.com/GQ9VXDImWN0BpzeC21kdNv",
+      "קדש ברנע": "https://chat.whatsapp.com/GQ9VXDImWN0BpzeC21kdNv",
+      "שער הנגב": "https://chat.whatsapp.com/J9RjzZcIe0qAUH43kEkacd",
+      "לב אחד שייקה": "https://chat.whatsapp.com/JBu9sQjHdER96VH55CEted"
+    };
+
+    function findLink() {
+      const input = document.getElementById("cityInput").value.trim();
+      const result = document.getElementById("result");
+
+      if (!input) {
+        result.innerHTML = "אנא הכנס שם עיר";
+        result.className = "result-error";
+        return;
+      }
+
+      const foundKey = Object.keys(cityLinks).find(
+        key => key.toLowerCase().includes(input.toLowerCase()) ||
+          input.toLowerCase().includes(key.toLowerCase().trim())
+      );
+
+      if (foundKey) {
+        result.innerHTML = `
+          <div>
+            <strong>נמצאה קבוצה עבור: ${foundKey}</strong>
+            <a href="${cityLinks[foundKey]}" target="_blank" class="whatsapp-link">
+              🔗 הצטרף לקבוצת הוואטסאפ
+            </a>
+          </div>
+        `;
+        result.className = "result-success";
+      } else {
+        result.innerHTML = "לא נמצאה קבוצה עבור העיר הזו. נסה לנסח שם אחר או בחר מהרשימה למטה.";
+        result.className = "result-error";
+      }
+    }
+
+    function selectCity(cityName) {
+      document.getElementById("cityInput").value = cityName;
+      findLink();
+    }
+
+    // Create city grid
+    function createCityGrid() {
+      const citiesGrid = document.getElementById("citiesGrid");
+      Object.keys(cityLinks).forEach(city => {
+        const cityTag = document.createElement("div");
+        cityTag.className = "city-tag";
+        cityTag.textContent = city;
+        cityTag.onclick = () => selectCity(city);
+        citiesGrid.appendChild(cityTag);
+      });
+    }
+
+    // Initialize city grid when page loads
+    document.addEventListener('DOMContentLoaded', createCityGrid);
+  </script>
+</body>
+
+</html>
