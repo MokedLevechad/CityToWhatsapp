@@ -260,12 +260,23 @@
 
   <script>
     let cityLinks = {};
-    fetch('cities.json')
+
+    // Fetch the city data from cities.json
+    fetch('cityLinks.json') // Corrected filename to cityLinks.json
     .then(res => res.json())
     .then(data => {
       cityLinks = data;
+      createCityGrid(); // Call createCityGrid AFTER the data is loaded
+    })
+    .catch(error => {
+      console.error('Error fetching city data:', error);
+      document.getElementById("result").innerHTML = "שגיאה בטעינת נתוני הערים. נסה לרענן את הדף.";
+      document.getElementById("result").className = "result-error";
     });
 
+    /**
+     * Finds and displays the WhatsApp group link for the entered city.
+     */
     function findLink() {
       const input = document.getElementById("cityInput").value.trim();
       const result = document.getElementById("result");
@@ -276,6 +287,7 @@
         return;
       }
 
+      // Find the city key that matches the input (case-insensitive, partial match)
       const foundKey = Object.keys(cityLinks).find(
         key => key.toLowerCase().includes(input.toLowerCase()) ||
           input.toLowerCase().includes(key.toLowerCase().trim())
@@ -297,15 +309,26 @@
       }
     }
 
+    /**
+     * Sets the input field value and triggers the search for a selected city.
+     * @param {string} cityName - The name of the city to select.
+     */
     function selectCity(cityName) {
       document.getElementById("cityInput").value = cityName;
       findLink();
     }
 
-    // Create city grid
+    /**
+     * Creates and populates the grid of available city tags.
+     */
     function createCityGrid() {
       const citiesGrid = document.getElementById("citiesGrid");
-      Object.keys(cityLinks).forEach(city => {
+      citiesGrid.innerHTML = ''; // Clear any existing content before re-rendering
+      
+      // Sort city names alphabetically for better user experience
+      const sortedCities = Object.keys(cityLinks).sort((a, b) => a.localeCompare(b, 'he'));
+
+      sortedCities.forEach(city => {
         const cityTag = document.createElement("div");
         cityTag.className = "city-tag";
         cityTag.textContent = city;
@@ -314,8 +337,7 @@
       });
     }
 
-    // Initialize city grid when page loads
-    document.addEventListener('DOMContentLoaded', createCityGrid);
+    // No need for DOMContentLoaded listener here, as createCityGrid is called after fetch.
   </script>
 </body>
 
